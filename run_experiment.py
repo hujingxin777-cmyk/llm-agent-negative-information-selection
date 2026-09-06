@@ -21,7 +21,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="负面信息选择实验统一启动脚本")
     parser.add_argument(
         "--config",
-        default="full_experiment_大规模实验.yaml",
+        default="config.yaml",
         help="单文件总配置路径",
     )
     parser.add_argument(
@@ -275,7 +275,13 @@ def run_smoke(config: dict, args) -> None:
             "chat_atmosphere": args.chat_atmosphere,
         },
     )
-    decision = LLMDecisionParser.parse_decision(raw_text, report_mapping=report_mapping)
+    static_cfg = config.get("static_measurement", {})
+    allow_neutral_final = str(static_cfg.get("final_choice_mode", "binary")).lower() == "ternary"
+    decision = LLMDecisionParser.parse_decision(
+        raw_text,
+        report_mapping=report_mapping,
+        allow_neutral_final=allow_neutral_final,
+    )
     metrics = encode_metrics(decision)
     print("=== RAW ===")
     print(raw_text)

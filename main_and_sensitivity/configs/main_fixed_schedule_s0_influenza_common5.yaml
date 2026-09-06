@@ -1,7 +1,0 @@
-extends: main_fixed_schedule_s0_influenza.yaml
-
-project:
-  output_dir: ../outputs/main_fixed_schedule_s0_influenza_common5
-
-p3:
-  max_timestep: 5

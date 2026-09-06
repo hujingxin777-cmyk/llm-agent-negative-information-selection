@@ -1,9 +1,0 @@
-extends: _main_300_common.yaml
-
-project:
-  output_dir: ../outputs/main_transfer_s3
-
-p3:
-  prototype_silent_update:
-    enabled: true
-    base_weight: 0.02

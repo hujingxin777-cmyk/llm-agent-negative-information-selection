@@ -282,10 +282,15 @@ class LLMDecisionParser:
     def parse_decision(
         response_text: str,
         report_mapping: Dict[str, str] | None = None,
+        allow_neutral_final: bool = False,
     ) -> DecisionOutput:
         data = LLMDecisionParser._parse_json(response_text)
         return DecisionOutput(
-            final_choice=LLMDecisionParser._normalize_final_choice(data, report_mapping),
+            final_choice=LLMDecisionParser._normalize_final_choice(
+                data,
+                report_mapping,
+                allow_neutral=allow_neutral_final,
+            ),
             credible_choice=LLMDecisionParser._normalize_credible(data.get("credible_choice"), report_mapping),
             share_choice=LLMDecisionParser._normalize_ternary(data.get("share_choice"), report_mapping),
             comment_choice=LLMDecisionParser._normalize_comment(data.get("comment_choice"), report_mapping),
@@ -352,10 +357,19 @@ class LLMDecisionParser:
         return choice if choice in {"positive", "negative"} else "neutral"
 
     @staticmethod
-    def _normalize_final_choice(data: Dict[str, Any], report_mapping: Dict[str, str] | None = None) -> str:
+    def _normalize_final_choice(
+        data: Dict[str, Any],
+        report_mapping: Dict[str, str] | None = None,
+        allow_neutral: bool = False,
+    ) -> str:
+        raw_final = str(data.get("final_choice") or "").strip().lower()
+        if allow_neutral and raw_final in {"neutral", "中立", "观望", "gray", "grey"}:
+            return "neutral"
         explicit = LLMDecisionParser._normalize_binary_choice(data.get("final_choice"), report_mapping)
         if explicit in {"positive", "negative"}:
             return explicit
+        if allow_neutral and data.get("credible_choice") in {"neutral", "中立"}:
+            return "neutral"
         credible = LLMDecisionParser._normalize_binary_choice(data.get("credible_choice"), report_mapping)
         if credible in {"positive", "negative"}:
             return credible

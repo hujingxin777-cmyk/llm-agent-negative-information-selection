@@ -1,6 +1,6 @@
 project:
   name: "negative-info-selection-large-scale-full-ab"
-  output_dir: "./outputs_大规模实验/full_ab_300agents_active15_repeats10"
+  output_dir: "./outputs"
 
 runtime:
   max_concurrency: 8
