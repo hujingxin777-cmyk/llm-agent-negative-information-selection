@@ -1,0 +1,18 @@
+extends: _main_300_common.yaml
+
+project:
+  output_dir: ../outputs/main_fixed_schedule_s0_influenza
+
+runtime:
+  repeat_start: 1
+  repeat_end: 5
+  scenario_filter: [influenza_a]
+
+experiments:
+  main:
+    repeats_per_cell: 5
+
+p3:
+  prototype_silent_update:
+    enabled: true
+    base_weight: 0.0

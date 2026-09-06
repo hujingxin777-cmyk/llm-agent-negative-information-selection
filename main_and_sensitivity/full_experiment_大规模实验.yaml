@@ -1,0 +1,260 @@
+project:
+  name: "negative-info-selection-large-scale-full-ab"
+  output_dir: "./outputs_大规模实验/full_ab_300agents_active15_repeats10"
+
+runtime:
+  max_concurrency: 8
+  api_concurrency: 8
+  batch_size: 8
+  batch_pause_seconds: 0
+  run_protection:
+    enabled: true
+    failed_row_limit: 1
+    no_progress_timeout_seconds: 300
+
+model:
+  provider: "openai_compatible"
+  api_style: "zhipu"
+  model_name: "glm-4"
+  api_base: "https://open.bigmodel.cn/api/paas/v4/"
+  api_key_env: "ZHIPU_API_KEY"
+  temperature: 0.7
+  max_tokens: 2048
+  response_format:
+    type: "json_object"
+  timeout_seconds: 60
+  connect_timeout_seconds: 15
+  pool_timeout_seconds: 60
+  max_retries: 5
+  retry_backoff_seconds: 15
+  api_concurrency: 8
+  min_request_interval_seconds: 0
+  request_jitter_seconds: 0.05
+  ssl_verify_mode: "certifi"
+  ssl_verify_path: null
+
+scenarios:
+  - name: "mycoplasma_pneumonia"
+    background: "近期多地医院儿科门诊接诊量增加，支原体肺炎相关话题在社交媒体上引发广泛讨论，公众对传播情况、就医压力与潜在风险保持高度关注。部分地区学校和家庭围绕儿童呼吸道疾病的讨论明显增多，信息环境呈现出官方通报、媒体报道与个体经验并行传播的状态。"
+    positive_narrative: "也有不少家长、儿科医生和学校老师提到，虽然近期就诊人数增加，但大多数孩子在完成规范治疗和居家休息后会在几天到一两周内逐步恢复，二次返诊和持续高热的情况并不占多数。一些医院已经通过分诊、延时门诊和加开号源来缓解压力，部分家长也反馈，就诊流程虽然比平时更紧张，但按医嘱治疗后孩子咳嗽和发热大多在可预期范围内缓慢改善。不过这类说法也承认，不同孩子的恢复节奏差异不小，不能把所有病例都看成完全一样。"
+    negative_narrative: "也有网络讨论强调，本轮支原体肺炎的持续影响可能比表面看起来更强，部分患儿咳嗽拖得更久、复诊次数增加，家庭照护负担也明显上升。一些家长和自媒体账号反复提到门诊拥挤、挂号困难、夜间咳嗽反复以及恢复慢于预期等现象，认为风险并不只体现在少数重症个案，而是体现在病程拖长和现实压力累积上。不过这些说法也承认，不同地区和不同家庭遇到的情况并不完全一致，个体经验未必能代表整体水平。"
+  - name: "influenza_a"
+    background: "近期部分城市流感病例有所增加，甲流相关话题在社交平台受到广泛关注，公众持续讨论传播趋势、校园感染风险以及日常防护强度。随着门诊量波动和网络经验贴增多，围绕“是否需要提高警惕”与“是否存在过度解读”的争论也逐渐升温。"
+    positive_narrative: "也有不少一线门诊医生、家长和学校老师提到，近期虽然感染人数有所上升，但大部分病例仍表现为短期发热、乏力和上呼吸道症状，经过休息、退热和常规治疗后通常能在几天内明显缓解。一些学校和社区反馈，通过请假隔离、通风消毒和及时就医，班级内的传播链往往能在一段时间内被压住，因此不少人认为当前更像是季节性波动中的可应对上升。不过这种判断也承认，不同地区的门诊压力和恢复节奏并不完全一样。"
+    negative_narrative: "与此同时，也有网络消息称，本轮甲流的实际传播情况可能比公开数据更严峻，部分患者高热反复、恢复时间拖长，家庭和班级内部的交叉感染压力也更明显。一些网友提到学校请假人数上升、门诊候诊时间变长以及“刚好转又反复”的经历，担心公众对传播强度和后续影响的判断偏乐观。不过这些讨论里也混杂着零散个案和转述信息，不同地区的严重程度并不完全相同。"
+
+personas:
+  - name: "baseline_open"
+    profile: ""
+  - name: "risk_sensitive"
+    profile: "你对潜在健康风险较为敏感，更关注可能被忽视的隐患。"
+  - name: "authority_trusting"
+    profile: "你通常更重视来源清楚、可核验、证据连续的信息；权威信任不等于默认相信安抚叙事。"
+  - name: "ordinary_user"
+    profile: "你是普通社交平台用户，不预设固定立场，通常会根据当前最显眼、最能打动的信息形成相对判断。"
+
+persona_runtime:
+  variant: "revised_2026_04_general_public"
+
+chat_atmospheres:
+  - "none"
+  - "positive_leaning"
+  - "negative_leaning"
+
+platforms:
+  independent:
+    label: "P1"
+    dynamic: false
+    has_reply_chain: false
+  low_feedback:
+    label: "P2"
+    dynamic: false
+    has_reply_chain: false
+  high_interaction:
+    label: "P3"
+    dynamic: true
+    has_reply_chain: true
+
+social_blocks:
+  low_feedback:
+    none:
+      influenza_a: |
+        【评论1】👍 40 最近班级和家长群里关于甲流的讨论比平时多一些，大家主要是在交流恢复情况和日常防护。
+        【评论2】👍 40 有些孩子退热后体力和咳嗽缓解节奏不一样，需要多观察几天，但多数还是按常规处理。
+        【评论3】👍 39 也有家长说按医嘱休息和用药后恢复比较平稳，学校一般也会提醒做好通风和请假登记。
+        【评论4】👍 39 个别恢复慢或反复不舒服的情况值得留意，不过还需要结合更多信息判断，不能只看单个经历。
+      mycoplasma_pneumonia: |
+        【评论1】👍 40 最近门诊和学校确实比平时忙一些，有些家庭会更关注孩子恢复情况，也能看到分诊、延时门诊等应对。
+        【评论2】👍 40 不少人提到按医嘱治疗后逐步恢复，不过不同孩子咳嗽缓解和体力恢复的节奏差异不小。
+        【评论3】👍 39 有家长说恢复过程需要继续观察，尤其是精神状态、发热变化和咳嗽缓解情况，按医生建议复查更稳妥。
+        【评论4】👍 39 也有医生提醒，多数病例仍可按常规处理，个别恢复慢的情况需要关注，但不一定代表整体都很严重。
+    positive_leaning:
+      influenza_a: |
+        【评论1】👍 42 有人说学校最近加强了请假隔离、通风消毒和晨检，至少能看到一些持续应对动作。
+        【评论2】👍 41 我看到几条反馈提到发热后按医嘱休息会逐步缓解，门诊忙一些也不等于整体失控。
+        【评论3】👍 40 如果主要是短期发热和上呼吸道症状，可以先按医生建议休息、用药和观察恢复节奏。
+        【评论4】👍 39 也有人提醒，退热后体力恢复可能有快有慢，继续观察是稳妥做法，但多数情况仍可按常规流程处理。
+      mycoplasma_pneumonia: |
+        【评论1】👍 42 有家长说孩子按医嘱治疗后总体能慢慢恢复，所以不必把每个病例都理解成严重风险。
+        【评论2】👍 41 有医生提醒，规范用药、休息和随访通常能处理多数情况，按流程观察比单纯担心更有用。
+        【评论3】👍 40 学校和家长如果能做好请假登记、复课观察和按时随访，很多不确定性会被及时发现并处理。
+        【评论4】👍 39 也有人提醒，个别孩子恢复慢一些需要继续观察，但不一定代表整体严重，按医嘱复查通常就能处理。
+    negative_leaning:
+      influenza_a: |
+        【评论1】👍 42 有几条反馈提到退热后恢复节奏不太一样，我会留意这种差异是否只是个别情况。
+        【评论2】👍 41 最近关于流感恢复和日常防护的讨论多了一些，可能说明大家更关注后续观察。
+        【评论3】👍 40 看到有人说退热后还会乏力或咳嗽时，我会稍微谨慎一些；医生也常提醒反复不适时要按需复诊。
+        【评论4】👍 39 也有人说多数病例可按常规处理，不过恢复慢一点的情况仍值得多观察几天。
+      mycoplasma_pneumonia: |
+        【评论1】👍 42 有家长提到，孩子退热后咳嗽缓解不一定同步，医生建议继续观察并按需复诊。
+        【评论2】👍 41 有评论说，支原体恢复节奏可能比普通感冒慢一些，家里需要更认真配合用药、请假和休息安排。
+        【评论3】👍 40 班级里如果连续几天都有孩子咳嗽或请假，家长会更留意后续变化，并按学校和医生建议安排复课观察。
+        【评论4】👍 39 也有医生提醒，多数病例可以规范处理；但症状拖延或反复时需要及时复查，不能只按普通感冒节奏观察。
+experiments:
+  main:
+    enabled: true
+    scenario_names: ["mycoplasma_pneumonia", "influenza_a"]
+    conditions: ["independent", "low_feedback", "high_interaction"]
+    default_persona: "main_baseline_neutral"
+    default_chat_atmosphere:
+      low_feedback: "none"
+      high_interaction: "none"
+    repeats_per_cell: 10
+  persona_supplement:
+    enabled: true
+    scenario_names: ["mycoplasma_pneumonia", "influenza_a"]
+    conditions: ["independent", "low_feedback", "high_interaction"]
+    persona_names: ["risk_sensitive", "authority_trusting", "ordinary_user"]
+    p3_persona_mode: "balanced_mix"
+    fixed_chat_atmosphere:
+      low_feedback: "none"
+      high_interaction: "none"
+    repeats_per_cell: 10
+  atmosphere_supplement:
+    enabled: true
+    scenario_names: ["mycoplasma_pneumonia", "influenza_a"]
+    conditions: ["independent", "low_feedback", "high_interaction"]
+    persona_name: "baseline_open"
+    use_main_baseline_for_none: true
+    chat_atmospheres: ["negative_leaning", "positive_leaning"]
+    repeats_per_cell: 10
+  combined_supplement:
+    enabled: true
+    scenario_names: ["mycoplasma_pneumonia", "influenza_a"]
+    conditions: ["independent", "low_feedback", "high_interaction"]
+    persona_names: ["risk_sensitive", "authority_trusting", "ordinary_user"]
+    p3_persona_mode: "balanced_mix"
+    use_persona_baseline_for_none: true
+    chat_atmospheres: ["negative_leaning", "none", "positive_leaning"]
+    repeats_per_cell: 10
+
+p3:
+  bootstrap_mode: "seeded_comments"
+  bootstrap_source: "low_feedback"
+  inherit_p2_state: true
+  bootstrap_seed_like_policy: "strip"
+  force_initial_floor_creation: true
+  num_agents: 300
+  max_active_agents: 15
+  activation:
+    exploration_slots: 2
+    stratified_ab_activation: true
+    early_persona_floor_steps: 2
+  activity_mix:
+    high: 0.2
+    medium: 0.5
+    low: 0.3
+  max_timestep: 15
+  visible_context_limit: 5
+  visibility_weights:
+    reply: 0.65
+    repost: 0.45
+    like: 0.12
+    recency: 0.20
+  action_balance:
+    observe_to_like_rate: 0.60
+    observe_to_repost_rate: 0.15
+    like_to_comment_rate: 0.08
+    quiet_comment_threshold: 4
+    like_heavy_margin: 2
+    reply_after_timestep: 2
+    reply_min_dynamic_floors: 3
+    post_to_reply_rate: 0.24
+  consensus_threshold: 0.9
+  consensus_hold_steps: 3
+  min_timestep_before_consensus_stop: 5
+  stalled_steps: 4
+  private_probe:
+    enabled: true
+    mode: "rule"
+    batch_size: 12
+    phases: ["entry", "terminal"]
+    mid_interval: 0
+  static_reference:
+    enabled: false
+  p2_prototype_initialization:
+    enabled: true
+    method: "llm_once"
+    strip_likes: true
+    hide_condition_labels_from_llm: true
+    cache_enabled: true
+    fallback_to_rule: true
+    prompt_version: "p2_readonly_seed_v3_relative_leaning"
+    fallback_anchor_without_likes:
+      negative_like:
+        latent_neg_tendency: 0.65
+        risk_arousal: 0.60
+        engagement_tendency: 0.53
+      positive_like:
+        latent_neg_tendency: 0.35
+        risk_arousal: 0.40
+        engagement_tendency: 0.47
+      neutral_like:
+        latent_neg_tendency: 0.50
+        risk_arousal: 0.50
+        engagement_tendency: 0.50
+    value_bounds:
+      latent_neg_tendency: [0.20, 0.80]
+      risk_arousal: [0.20, 0.80]
+      engagement_tendency: [0.30, 0.70]
+    individual_noise:
+      latent_scale: 0.03
+      risk_scale: 0.03
+      engagement_scale: 0.02
+    baseline_open_guardrail:
+      enabled: true
+    persona_gradient_guardrail:
+      enabled: false
+      min_latent_gap: 0.08
+      min_risk_gap: 0.06
+  prototype_panel:
+    enabled: true
+    include_active_agents: false
+  prototype_silent_update:
+    enabled: true
+    base_weight: 0.01
+    noise_scale: 0.005
+    activation_threshold: 0.65
+  dynamics:
+    exposure_shift_weight: 0.08
+    arousal_shift_weight: 0.025
+    risk_shift_weight: 0.045
+    majority_risk_shift_weight: 0.065
+    majority_latent_shift_weight: 0.05
+    authority_trusting_exposure_shift_weight: 0.025
+    authority_trusting_exposure_pressure_floor: 0.60
+    authority_trusting_exposure_shift_cap: 0.020
+    authority_trusting_positive_anchor_relief: 0.45
+    authority_trusting_negative_anchor_factor: 0.52
+    risk_sensitive_negative_anchor_factor: 1.08
+    ordinary_user_negative_anchor_factor: 0.68
+    decision_anchor_weight: 0.22
+    positive_anchor_factor: 0.30
+    runaway_consensus_min_events: 6
+    runaway_consensus_negative_share: 0.78
+    runaway_consensus_high_arousal_floor: 0.62
+    runaway_consensus_positive_latent_flip_rate: 0.35
+    runaway_consensus_neutral_latent_flip_rate: 0.20
+  sensitivity:
+    active_levels: [3, 6, 9]
+    timestep_levels: [10, 15, 20]

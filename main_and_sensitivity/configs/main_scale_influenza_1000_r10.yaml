@@ -1,0 +1,19 @@
+extends: _main_300_common.yaml
+
+project:
+  output_dir: ../outputs/main_scale_influenza_1000_r10
+
+runtime:
+  repeat_start: 1
+  repeat_end: 10
+  scenario_filter: [influenza_a]
+
+experiments:
+  main:
+    repeats_per_cell: 10
+
+p3:
+  num_agents: 1000
+  max_active_agents: 50
+  activation:
+    exploration_slots: 7

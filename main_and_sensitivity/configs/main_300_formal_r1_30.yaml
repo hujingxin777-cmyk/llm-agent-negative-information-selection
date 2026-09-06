@@ -1,0 +1,4 @@
+extends: _main_300_common.yaml
+
+project:
+  output_dir: ../outputs/main_300_formal_r1_30

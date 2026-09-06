@@ -1,0 +1,7 @@
+extends: deepseek_v4_flash_main_r10.yaml
+
+# 官方直连模板。当前共享 .env 中 DEEPSEEK_API_KEY 为空，因此流水线默认使用 AnyAPI。
+model:
+  api_style: deepseek
+  api_base: https://api.deepseek.com
+  api_key_env: DEEPSEEK_API_KEY

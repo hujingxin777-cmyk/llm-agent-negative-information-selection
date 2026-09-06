@@ -1,0 +1,8 @@
+extends: _main_300_common.yaml
+
+project:
+  output_dir: ../outputs/main_ablation_like_channel
+
+p3:
+  action_policy:
+    mode: like_channel

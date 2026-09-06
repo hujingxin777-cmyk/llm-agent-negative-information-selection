@@ -1,0 +1,26 @@
+extends: ../full_experiment_大规模实验.yaml
+
+runtime:
+  repeat_start: 1
+  repeat_end: 30
+  run_protection:
+    price_per_1k_tokens: 0.003
+    max_total_tokens: 0
+
+experiments:
+  main:
+    enabled: true
+    repeats_per_cell: 30
+  persona_supplement:
+    enabled: false
+  atmosphere_supplement:
+    enabled: false
+  combined_supplement:
+    enabled: false
+
+p3:
+  num_agents: 300
+  max_active_agents: 15
+  max_timestep: 15
+  action_policy:
+    mode: full

@@ -1,0 +1,11 @@
+extends: main_fixed_schedule_s0_influenza.yaml
+
+project:
+  output_dir: ../outputs/main_fixed_schedule_s2_influenza
+
+p3:
+  activation:
+    replay_schedule_path: ../outputs/main_fixed_schedule_s0_influenza/progress/activation_schedule.jsonl
+  prototype_silent_update:
+    enabled: true
+    base_weight: 0.01

@@ -1,0 +1,13 @@
+extends: supplement_static_ternary_r300_2026-07-22.yaml
+
+project:
+  output_dir: ../outputs/b_static_ternary_r300_2026-07-22
+
+experiments:
+  persona_supplement:
+    enabled: false
+  atmosphere_supplement:
+    enabled: true
+    conditions: ["low_feedback"]
+  combined_supplement:
+    enabled: false

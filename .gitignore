@@ -1,0 +1,22 @@
+.DS_Store
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# Generated experiment artefacts can contain large model-response logs.
+outputs/
+outputs_*/
+**/outputs/
+**/outputs_*/
+progress/
+figures/
+export_bundle/
+
+# Editor files
+.idea/
+.vscode/
+*.swp

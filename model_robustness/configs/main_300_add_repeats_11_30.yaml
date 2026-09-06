@@ -1,0 +1,8 @@
+extends: _main_300_common.yaml
+
+project:
+  output_dir: ../outputs/main_300_repeats_11_30
+
+runtime:
+  repeat_start: 11
+  repeat_end: 30

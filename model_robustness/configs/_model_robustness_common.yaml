@@ -1,0 +1,32 @@
+extends: ../full_experiment_大规模实验.yaml
+
+runtime:
+  max_concurrency: 4
+  api_concurrency: 4
+  repeat_start: 1
+  repeat_end: 10
+  run_protection:
+    enabled: true
+    failed_row_limit: 1
+    no_progress_timeout_seconds: 600
+    price_per_1k_tokens: 0.003
+    max_total_tokens: 0
+
+experiments:
+  main:
+    enabled: true
+    repeats_per_cell: 10
+  persona_supplement:
+    enabled: false
+  atmosphere_supplement:
+    enabled: false
+  combined_supplement:
+    enabled: false
+
+p3:
+  num_agents: 300
+  max_active_agents: 15
+  max_timestep: 15
+  prototype_silent_update:
+    enabled: true
+    base_weight: 0.01

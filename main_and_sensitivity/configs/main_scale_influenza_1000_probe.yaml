@@ -1,0 +1,15 @@
+extends: main_scale_influenza_1000_r10.yaml
+
+project:
+  output_dir: ../outputs/main_scale_influenza_1000_probe
+
+runtime:
+  repeat_start: 1
+  repeat_end: 2
+
+experiments:
+  main:
+    repeats_per_cell: 2
+
+p3:
+  max_timestep: 8
